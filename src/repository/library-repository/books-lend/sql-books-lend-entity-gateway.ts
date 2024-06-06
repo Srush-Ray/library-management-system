@@ -18,23 +18,22 @@ export default class SqlBooksLendEntityGateway
     this.mysql = mysql;
   }
   async getBookLendInfoByBookName(bookName: string): Promise<any> {
-    const query = `SELECT * FROM ${TableNames.BOOKS_LEND} bl 
+    try {
+      const query = `SELECT * FROM ${TableNames.BOOKS_LEND} bl 
     INNER JOIN ${TableNames.BOOKS} b ON bl.book_id=b.book_id
     INNER JOIN ${TableNames.CUSTOMER} c ON c.customer_id=bl.customer_id
-    WHERE b.book_name LIKE '%?%'`;
-    const result = this.runQuery(query, [bookName]);
-    return result;
+    WHERE b.book_name = ?`;
+      const result = await this.runQuery(query, [bookName]);
+      return result;
+    } catch (error) {
+      throw new RestError('Sql Error', 400);
+    }
   }
-  async getBookById(id: string): Promise<any> {
-    const queryStr = `SELECT * FROM ${TableNames.CUSTOMER} c WHERE c.customer_id=?`;
-    const result = this.runQuery(queryStr, [id]);
-    return result;
-  }
-  async createCustomer(book: Books): Promise<any> {
-    const queryStr = `INSERT INTO ${TableNames.CUSTOMER} SET ? ON DUPLICATE KEY UPDATE ?`;
-    const result = this.runQuery(queryStr, [book, book]);
-    return result;
-  }
+  // async getBookById(id: string): Promise<any> {
+  //   const queryStr = `SELECT * FROM ${TableNames.CUSTOMER} c WHERE c.customer_id=?`;
+  //   const result = this.runQuery(queryStr, [id]);
+  //   return result;
+  // }
 
   async transactionToInsertFileData({
     customer,
@@ -89,13 +88,9 @@ export default class SqlBooksLendEntityGateway
       END;
       DELIMITER ;
     `;
-
-      console.log(transStr);
-      const result = this.runQuery(transStr);
-      console.log('res', result);
+      const result = await this.runQuery(transStr);
       return result;
     } catch (error) {
-      console.log('here error', error);
       throw new RestError('Sql Error', 400);
     }
   }

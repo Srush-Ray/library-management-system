@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import * as MYSQL from 'mysql2/promise';
+import * as sqlstring from 'sqlstring';
 
 export interface PaginatedResult<R> {
   result?: R[];
@@ -31,6 +32,7 @@ export default class SqlBaseCrudEntityGateway {
     query: string,
     params?: unknown | unknown[],
   ): Promise<P[]> {
+    console.log(sqlstring.format(query, params));
     try {
       const queryPromise = (await source.query(
         query,
