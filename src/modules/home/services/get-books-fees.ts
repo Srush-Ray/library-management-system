@@ -13,9 +13,11 @@ export class GetBookReturnFees {
   async consume({
     book_ids,
     customer_id,
+    return_on = '',
   }: {
     book_ids: string[];
     customer_id: string;
+    return_on?: string;
   }): Promise<any> {
     try {
       const returnDatesResult = await this.lendBooks.getReturnBooksByCustomerID(
@@ -24,11 +26,10 @@ export class GetBookReturnFees {
       );
       if (returnDatesResult?.length) {
         const returnDate = returnDatesResult?.map((rd) => {
-          const todayDate = moment(new Date()).format('YYYY-MM-DD');
-          const dayDiff = moment().diff(
-            moment(rd.lend_date).add(rd.days_to_return, 'days'),
-            'days',
-          );
+          const todayDate = return_on
+            ? moment(return_on).format('YYYY-MM-DD')
+            : moment(new Date()).format('YYYY-MM-DD');
+          const dayDiff = moment(todayDate).diff(moment(rd.lend_date), 'days');
           return {
             lend_date: moment(rd.lend_date).format('YYYY-MM-DD'),
             days_to_return: rd.days_to_return,
@@ -51,8 +52,10 @@ export class GetBookReturnFees {
   async consumeGenreFees({
     book_ids,
     customer_id,
+    return_on = '',
   }: {
     book_ids: string[];
+    return_on?: string;
     customer_id: string;
   }): Promise<any> {
     try {
@@ -64,9 +67,11 @@ export class GetBookReturnFees {
       if (returnDatesResult?.length) {
         const returnDate = await Promise.all(
           returnDatesResult?.map(async (rd) => {
-            const todayDate = moment(new Date()).format('YYYY-MM-DD');
-            const dayDiff = moment().diff(
-              moment(rd.lend_date).add(rd.days_to_return, 'days'),
+            const todayDate = return_on
+              ? moment(return_on).format('YYYY-MM-DD')
+              : moment(new Date()).format('YYYY-MM-DD');
+            const dayDiff = moment(todayDate).diff(
+              moment(rd.lend_date),
               'days',
             );
             const genreDetails = await this.books.getGenreFees(rd.genre);
@@ -98,8 +103,10 @@ export class GetBookReturnFees {
   async consumeGenreFeesV3({
     book_ids,
     customer_id,
+    return_on = '',
   }: {
     book_ids: string[];
+    return_on?: string;
     customer_id: string;
   }): Promise<any> {
     try {
@@ -111,9 +118,11 @@ export class GetBookReturnFees {
       if (returnDatesResult?.length) {
         const returnDate = await Promise.all(
           returnDatesResult?.map(async (rd) => {
-            const todayDate = moment(new Date()).format('YYYY-MM-DD');
-            const dayDiff = moment().diff(
-              moment(rd.lend_date).add(rd.days_to_return, 'days'),
+            const todayDate = return_on
+              ? moment(return_on).format('YYYY-MM-DD')
+              : moment(new Date()).format('YYYY-MM-DD');
+            const dayDiff = moment(todayDate).diff(
+              moment(rd.lend_date),
               'days',
             );
             const genreDetails = await this.books.getGenreFees(rd.genre);

@@ -43,31 +43,49 @@ export class HomeController {
 
   @Post('return-fees')
   async getBookFees(
-    @Body() body?: { book_ids: string[]; customer_id: string },
+    @Body()
+    body?: {
+      book_ids: string[];
+      customer_id: string;
+      return_on?: string;
+    },
   ) {
     return await this.returnFeesService.consume({
       book_ids: body.book_ids,
       customer_id: body.customer_id,
+      return_on: body.return_on,
     });
   }
 
   @Post('v2/return-fees')
   async getGenreBookFees(
-    @Body() body?: { book_ids: string[]; customer_id: string },
+    @Body()
+    body?: {
+      book_ids: string[];
+      customer_id: string;
+      return_on?: string;
+    },
   ) {
     return await this.returnFeesService.consumeGenreFees({
       book_ids: body.book_ids,
       customer_id: body.customer_id,
+      return_on: body.return_on,
     });
   }
 
   @Post('v3/return-fees')
   async getGenreBookFeesV3(
-    @Body() body?: { book_ids: string[]; customer_id: string },
+    @Body()
+    body?: {
+      book_ids: string[];
+      customer_id: string;
+      return_on?: string;
+    },
   ) {
     return await this.returnFeesService.consumeGenreFeesV3({
       book_ids: body.book_ids,
       customer_id: body.customer_id,
+      return_on: body.return_on,
     });
   }
 }
