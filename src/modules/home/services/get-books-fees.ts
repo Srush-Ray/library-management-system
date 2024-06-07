@@ -95,4 +95,54 @@ export class GetBookReturnFees {
       throw new RestError(error.message, 400);
     }
   }
+  async consumeGenreFeesV3({
+    book_ids,
+    customer_id,
+  }: {
+    book_ids: string[];
+    customer_id: string;
+  }): Promise<any> {
+    try {
+      const returnDatesResult = await this.lendBooks.getReturnBooksByCustomerID(
+        customer_id,
+        book_ids,
+      );
+
+      if (returnDatesResult?.length) {
+        const returnDate = await Promise.all(
+          returnDatesResult?.map(async (rd) => {
+            const todayDate = moment(new Date()).format('YYYY-MM-DD');
+            const dayDiff = moment().diff(
+              moment(rd.lend_date).add(rd.days_to_return, 'days'),
+              'days',
+            );
+            const genreDetails = await this.books.getGenreFees(rd.genre);
+            return {
+              lend_date: moment(rd.lend_date).format('YYYY-MM-DD'),
+              days_to_return: rd.days_to_return,
+              return_date: moment(rd.return_date).format('YYYY-MM-DD'),
+              returned_on: todayDate,
+              days_diff: dayDiff,
+              book_name: rd.book_name,
+              customer_name: rd.customer_name,
+              fees:
+                dayDiff <= genreDetails?.mini_days
+                  ? `₹${dayDiff * parseFloat(genreDetails?.minimum_fees)}`
+                  : `₹${dayDiff * parseFloat(genreDetails?.fees)}`,
+            };
+          }),
+        );
+
+        return returnDate?.map((item) => {
+          return {
+            ...item,
+          };
+        });
+      } else {
+        return 'No Data Found';
+      }
+    } catch (error) {
+      throw new RestError(error.message, 400);
+    }
+  }
 }

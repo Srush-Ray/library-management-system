@@ -60,4 +60,14 @@ export class HomeController {
       customer_id: body.customer_id,
     });
   }
+
+  @Post('v3/return-fees')
+  async getGenreBookFeesV3(
+    @Body() body?: { book_ids: string[]; customer_id: string },
+  ) {
+    return await this.returnFeesService.consumeGenreFeesV3({
+      book_ids: body.book_ids,
+      customer_id: body.customer_id,
+    });
+  }
 }

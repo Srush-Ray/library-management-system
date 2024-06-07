@@ -30,7 +30,7 @@ export class ReadFileToDatabase {
                     : 'FICTION',
               author_name: bk.author_name,
               total_copies: 1,
-              available_copies: 1,
+              available_copies: 0,
             },
             lend_books: {
               id: uuidv4(),
