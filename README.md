@@ -60,4 +60,12 @@ $ npm run test:cov
 
 ## Project information
 This is a library management system.
+Here I have consider only 1 copy of book will be available.
+In first story I have considered static price
+In second story I have added fees pricing to database
+In third story I have added columns for fees pricing to database to make it dynamic
+Later I have also made return date dynamic and calculated days difference on today if return date is not given
+
+DATE FORMAT : "YYYY-MM-DD"
+
 
