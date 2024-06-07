@@ -12,10 +12,10 @@ export class GetBookReturnDetailsByName {
     const returnDate = returnDatesResult?.map((rd) => {
       return {
         lend_date: moment(rd.lend_date).format('YYYY-MM-DD'),
-        days_to_return: 23,
+        days_to_return: rd.days_to_return,
         return_date: moment(rd.return_date).format('YYYY-MM-DD'),
-        book_name: 'meh decimalise under',
-        customer_name: 'Sabrina Welch',
+        book_name: rd.book_name,
+        customer_name: rd.customer_name,
       };
     });
     return returnDate;

@@ -40,6 +40,8 @@ export default class SqlBaseCrudEntityGateway {
       )) as unknown as P[][];
       return queryPromise[0];
     } catch (err) {
+      console.log('ere', err);
+
       throw err;
     }
   }

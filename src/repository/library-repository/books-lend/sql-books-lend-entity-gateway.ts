@@ -6,6 +6,7 @@ import { TableNames } from 'src/constants/enums/table-name';
 import { Books } from 'src/constants/dto/books/sql-books';
 import { Customer } from 'src/constants/dto/customer/sql-customer';
 import RestError from 'src/config/error/rest-error';
+import { sanitizeArray } from 'src/utils/common-utils';
 
 @Injectable()
 export default class SqlBooksLendEntityGateway
@@ -91,6 +92,24 @@ export default class SqlBooksLendEntityGateway
       const result = await this.runQuery(transStr);
       return result;
     } catch (error) {
+      throw new RestError('Sql Error', 400);
+    }
+  }
+
+  async getReturnBooksByCustomerID(
+    customer_id: string,
+    books_ids: string[],
+  ): Promise<any> {
+    try {
+      console.log('books_ids', books_ids);
+      const query = `SELECT * FROM ${TableNames.BOOKS_LEND} bl 
+    INNER JOIN ${TableNames.BOOKS} b ON bl.book_id=b.book_id
+    INNER JOIN ${TableNames.CUSTOMER} c ON c.customer_id=bl.customer_id
+    WHERE bl.customer_id = ? AND bl.book_id IN ('${sanitizeArray(books_ids)?.join(`','`)}')`;
+      const result = await this.runQuery(query, [customer_id]);
+      return result;
+    } catch (error) {
+      console.log(error);
       throw new RestError('Sql Error', 400);
     }
   }

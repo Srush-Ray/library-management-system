@@ -3,6 +3,10 @@ import { Customer } from 'src/constants/dto/customer/sql-customer';
 
 export default interface BooksLendEntityGateway {
   getBookLendInfoByBookName(bookName: string): Promise<any>;
+  getReturnBooksByCustomerID(
+    customer_id: string,
+    books_ids: string[],
+  ): Promise<any>;
   transactionToInsertFileData({
     customer,
     books,

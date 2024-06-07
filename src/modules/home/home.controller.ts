@@ -10,12 +10,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { ReadFileToDatabase } from './services/read-file-init-db';
 import { GetBookReturnDetailsByName } from './services/get-book-return-details';
+import { GetBookReturnFees } from './services/get-books-fees';
 
 @Controller('/')
 export class HomeController {
   constructor(
     private readonly readFileService: ReadFileToDatabase,
     private readonly bookReturnService: GetBookReturnDetailsByName,
+    private readonly returnFeesService: GetBookReturnFees,
   ) {}
   @Post('upload')
   @UseInterceptors(
@@ -36,6 +38,16 @@ export class HomeController {
   async getBookReturnDetails(@Query() query?: { book_name: string }) {
     return await this.bookReturnService.consume({
       book_name: query.book_name,
+    });
+  }
+
+  @Post('return-fees')
+  async getBookFees(
+    @Body() body?: { book_ids: string[]; customer_id: string },
+  ) {
+    return await this.returnFeesService.consume({
+      book_ids: body.book_ids,
+      customer_id: body.customer_id,
     });
   }
 }
