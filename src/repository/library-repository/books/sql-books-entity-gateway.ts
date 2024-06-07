@@ -17,12 +17,18 @@ export default class SqlBooksEntityGateway
   }
   async getBookById(id: string): Promise<any> {
     const queryStr = `SELECT * FROM ${TableNames.CUSTOMER} c WHERE c.customer_id=?`;
-    const result = this.runQuery(queryStr, [id]);
+    const result = await this.runQuery(queryStr, [id]);
     return result;
   }
   async createBook(book: Books): Promise<any> {
     const queryStr = `INSERT INTO ${TableNames.CUSTOMER} SET ? ON DUPLICATE KEY UPDATE ?`;
-    const result = this.runQuery(queryStr, [book, book]);
+    const result = await this.runQuery(queryStr, [book, book]);
     return result;
+  }
+
+  async getGenreFees(genre: string): Promise<any> {
+    const queryStr = `SELECT * FROM ${TableNames.FEES} WHERE genre = ?`;
+    const result = await this.runQuery(queryStr, [genre]);
+    return result?.[0] || {};
   }
 }

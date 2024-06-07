@@ -4,15 +4,21 @@ CREATE TABLE IF NOT EXISTS `customer` (
     `customer_name` varchar(255) NOT NULL,
     PRIMARY KEY (`customer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=92628 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE IF NOT EXISTS `fees` (
+    `genre` varchar(255) NOT NULL UNIQUE,
+    `fees` varchar(255) NOT NULL UNIQUE,
+    PRIMARY KEY (`genre`),
+) ENGINE=InnoDB AUTO_INCREMENT=92628 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `books` (
     `book_id` varchar(500) NOT NULL UNIQUE,
     `book_name` varchar(255) NOT NULL,
-    `genre` varchar(255) NULL DEFAULT 'General',
+    `genre` varchar(255) NULL DEFAULT 'REGULAR',
     `author_name` varchar(255),
     `total_copies` int,
     `available_copies` int,
     PRIMARY KEY (`book_id`),
-    KEY (`book_name`)
+    KEY (`book_name`),
+    FOREIGN KEY (genre) REFERENCES fees(genre)
 ) ENGINE=InnoDB AUTO_INCREMENT=92628 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `books_lent` (
     `id` varchar(255) NOT NULL,

@@ -18,12 +18,12 @@ export default class SqlCustomerEntityGateway
   }
   async getCustomerById(id: string): Promise<any> {
     const queryStr = `SELECT * FROM ${TableNames.CUSTOMER} c WHERE c.customer_id=?`;
-    const result = this.runQuery(queryStr, [id]);
+    const result = await this.runQuery(queryStr, [id]);
     return result;
   }
   async createCustomer(customer: Customer): Promise<any> {
     const queryStr = `INSERT INTO ${TableNames.CUSTOMER} SET ? ON DUPLICATE KEY UPDATE ?`;
-    const result = this.runQuery(queryStr, [customer, customer]);
+    const result = await this.runQuery(queryStr, [customer, customer]);
     return result;
   }
 }

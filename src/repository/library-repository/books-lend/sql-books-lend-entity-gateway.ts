@@ -30,11 +30,6 @@ export default class SqlBooksLendEntityGateway
       throw new RestError('Sql Error', 400);
     }
   }
-  // async getBookById(id: string): Promise<any> {
-  //   const queryStr = `SELECT * FROM ${TableNames.CUSTOMER} c WHERE c.customer_id=?`;
-  //   const result = this.runQuery(queryStr, [id]);
-  //   return result;
-  // }
 
   async transactionToInsertFileData({
     customer,
@@ -101,7 +96,6 @@ export default class SqlBooksLendEntityGateway
     books_ids: string[],
   ): Promise<any> {
     try {
-      console.log('books_ids', books_ids);
       const query = `SELECT * FROM ${TableNames.BOOKS_LEND} bl 
     INNER JOIN ${TableNames.BOOKS} b ON bl.book_id=b.book_id
     INNER JOIN ${TableNames.CUSTOMER} c ON c.customer_id=bl.customer_id
@@ -109,7 +103,6 @@ export default class SqlBooksLendEntityGateway
       const result = await this.runQuery(query, [customer_id]);
       return result;
     } catch (error) {
-      console.log(error);
       throw new RestError('Sql Error', 400);
     }
   }

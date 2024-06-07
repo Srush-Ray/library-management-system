@@ -15,14 +15,19 @@ export class ReadFileToDatabase {
   async insertDataIntoDB(dataToInsert) {
     const sanitizedData = sanitizeArray(dataToInsert);
     sanitizedData?.forEach((data) => {
-      const booksFinal = data?.book_lend_details?.map((bk) => {
+      const booksFinal = data?.book_lend_details?.map((bk, index) => {
         if (bk.book_id && bk.book_name) {
           const dateLend = moment(bk.lend_date, 'YYYY-MM-DD');
           return {
             book_details: {
               book_id: bk.book_id,
               book_name: bk.book_name,
-              genre: 'General',
+              genre:
+                index / 2 == 0
+                  ? 'REGULAR'
+                  : index / 3 == 0
+                    ? 'NOVEL'
+                    : 'FICTION',
               author_name: bk.author_name,
               total_copies: 1,
               available_copies: 1,
